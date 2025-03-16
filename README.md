@@ -8,8 +8,74 @@ This package provides a standardized way to handle errors across all Appoosto mi
 
 ### Installation
 
+This package is not published on npm and is only available through GitHub.
+
+You can install this package directly from GitHub:
+
 ```bash
-npm install @appoosto/core
+npm install github:NewAppoosto/appoosto-core#main
+```
+
+Or with a specific version tag:
+
+```bash
+npm install github:NewAppoosto/appoosto-core#v0.1.1
+```
+
+Alternatively, add it to your `package.json` dependencies:
+
+```json
+"dependencies": {
+  "@appoosto/core": "github:NewAppoosto/appoosto-core#main"
+}
+```
+
+**Note:** If the repository is private, you'll need to set up authentication for npm to access GitHub. This typically involves creating a GitHub Personal Access Token with the appropriate permissions.
+
+### Version Tags
+
+This package uses Git tags for versioning. When you reference a specific version (e.g., `github:NewAppoosto/appoosto-core#v0.1.1`), you're pointing to a Git tag.
+
+#### Creating Version Tags
+
+After updating the package version, create and push a Git tag:
+
+```bash
+# Use npm version to update package.json and create a tag
+npm version patch
+
+# This will automatically:
+# 1. Increment the patch version in package.json
+# 2. Commit the change
+# 3. Create a git tag
+# 4. Push the commit and tag to GitHub (due to the postversion script)
+```
+
+Your package.json already has the necessary scripts configured:
+
+```json
+"scripts": {
+  "version": "git add -A",
+  "postversion": "git push && git push --tags"
+}
+```
+
+#### Managing Tags
+
+View all tags:
+
+```bash
+git tag
+```
+
+Delete a tag if needed:
+
+```bash
+# Delete locally
+git tag -d vx.y.z
+
+# Delete from remote
+git push --delete origin vx.y.z
 ```
 
 ### Usage
