@@ -17,6 +17,7 @@ registerEnumType(InvitationStatus, {
 });
 
 @ObjectType({ description: "Company details" })
+@Directive('@key(fields: "id")')
 export class CompanyDetails {
   @Field(() => ID)
   id!: string;
