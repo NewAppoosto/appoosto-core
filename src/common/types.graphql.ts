@@ -10,7 +10,7 @@ export class PaginationInput {
 }
 
 @ObjectType()
-export class Pagination<T> {
+export class PaginationBase {
   @Field(() => Int)
   total!: number;
 }
