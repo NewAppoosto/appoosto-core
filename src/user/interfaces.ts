@@ -1,19 +1,11 @@
-import { BaseModel } from "../interface/base.interface";
-
 /**
  * User interface
  */
-export interface IUser extends BaseModel {
-  adminId: string;
-  isCompany: boolean;
-  userDetails?: IUserDetails;
-  companyDetails?: ICompanyDetails;
-}
 
 /**
  * User details interface
  */
-export interface IUserDetails extends BaseModel {
+export interface IUserDetails {
   id: string;
   username: string;
   email: string;
@@ -22,7 +14,7 @@ export interface IUserDetails extends BaseModel {
 /**
  * Company details interface
  */
-export interface ICompanyDetails extends BaseModel {
+export interface ICompanyDetails  {
   id: string;
   name: string;
   legal_address: string;
