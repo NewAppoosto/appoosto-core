@@ -8,7 +8,6 @@ export * from "./utils";
 export * from "./types";
 
 // Base interface
-export * from "./interface/base.interface";
 export * from "./graphql";
 export * from "./interface";
 
