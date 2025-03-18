@@ -1,4 +1,10 @@
-import { Directive, Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
+import {
+  Directive,
+  Field,
+  ID,
+  ObjectType,
+  registerEnumType,
+} from "@nestjs/graphql";
 import { IUserDetails } from "./interfaces";
 
 /**
@@ -17,16 +23,10 @@ registerEnumType(InvitationStatus, {
 });
 
 @ObjectType({ description: "Company details" })
-@Directive('@key(fields: "id")')
+@Directive("@shareable")
 export class CompanyDetails {
   @Field(() => ID)
   id!: string;
-
-  @Field()
-  created_at!: Date;
-
-  @Field()
-  updated_at!: Date;
 
   @Field({ description: "Company name" })
   name!: string;
@@ -39,16 +39,10 @@ export class CompanyDetails {
 }
 
 @ObjectType({ description: "User details" })
-@Directive('@key(fields: "id")')
+@Directive("@shareable")
 export class UserDetails implements IUserDetails {
   @Field(() => ID)
   id!: string;
-
-  @Field()
-  created_at!: Date;
-
-  @Field()
-  updated_at!: Date;
 
   @Field({
     description:
