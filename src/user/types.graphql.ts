@@ -23,6 +23,7 @@ registerEnumType(InvitationStatus, {
 });
 
 @ObjectType({ description: "Company details" })
+@Directive('@key(fields: "id")')
 @Directive("@shareable")
 export class CompanyDetails {
   @Field(() => ID)
@@ -39,6 +40,7 @@ export class CompanyDetails {
 }
 
 @ObjectType({ description: "User details" })
+@Directive('@key(fields: "id")')
 @Directive("@shareable")
 export class UserDetails implements IUserDetails {
   @Field(() => ID)
