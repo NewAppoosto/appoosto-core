@@ -1,6 +1,6 @@
 import { asyncHandler } from "./asyncHandler";
 
-function AsyncClass() {
+export function AsyncClass() {
   return function (target: any) {
     // Get all methods of the class
     const methods = Object.getOwnPropertyNames(target.prototype);
