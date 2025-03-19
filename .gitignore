@@ -53,6 +53,6 @@ temp/
 
 # TypeScript incremental compilation cache
 *.tsbuildinfo
-
+pnpm-lock.yaml
 # Jest
 jest-
