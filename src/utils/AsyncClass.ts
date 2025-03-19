@@ -1,24 +1,17 @@
 import { asyncHandler } from "./asyncHandler";
 
-export function AsyncClass() {
-  return function (target: any) {
-    // Get all methods of the class
-    const methods = Object.getOwnPropertyNames(target.prototype);
+export function AsyncMethod() {
+  return function (
+    target: any,
+    propertyKey: string,
+    descriptor: PropertyDescriptor
+  ) {
+    const originalMethod = descriptor.value;
 
-    methods.forEach((method) => {
-      // Skip constructor
-      if (method === "constructor") return;
+    descriptor.value = function (...args: any[]) {
+      return asyncHandler(originalMethod.bind(this))(...args);
+    };
 
-      const descriptor = Object.getOwnPropertyDescriptor(
-        target.prototype,
-        method
-      );
-      if (descriptor && typeof descriptor.value === "function") {
-        // Wrap the method with asyncHandler
-        target.prototype[method] = asyncHandler(descriptor.value);
-      }
-    });
-
-    return target;
+    return descriptor;
   };
 }
