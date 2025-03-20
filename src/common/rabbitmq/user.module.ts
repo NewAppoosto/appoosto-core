@@ -2,21 +2,19 @@ import { DynamicModule, Module } from "@nestjs/common";
 import { ClientsModule } from "@nestjs/microservices";
 import { RabbitMQConfig, createRabbitMQOptions } from "./types";
 
-interface RabbitMQNotificationModuleOptions extends RabbitMQConfig {
+interface RabbitMQUserModuleOptions extends RabbitMQConfig {
   isGlobal?: boolean;
 }
 
 @Module({})
-export class RabbitMQNotificationModule {
-  static forRoot(options: RabbitMQNotificationModuleOptions): DynamicModule {
+export class RabbitMQUserModule {
+  static forRoot(options: RabbitMQUserModuleOptions): DynamicModule {
     const { isGlobal = false, ...config } = options;
     return {
-      module: RabbitMQNotificationModule,
+      module: RabbitMQUserModule,
       global: isGlobal,
       imports: [
-        ClientsModule.register([
-          createRabbitMQOptions("NOTIFICATION_SERVICE", config),
-        ]),
+        ClientsModule.register([createRabbitMQOptions("USER_SERVICE", config)]),
       ],
       exports: [ClientsModule],
     };
@@ -24,16 +22,16 @@ export class RabbitMQNotificationModule {
 
   static forRootAsync(
     configFactory: () =>
-      | Promise<RabbitMQNotificationModuleOptions>
-      | RabbitMQNotificationModuleOptions
+      | Promise<RabbitMQUserModuleOptions>
+      | RabbitMQUserModuleOptions
   ): DynamicModule {
     return {
-      module: RabbitMQNotificationModule,
+      module: RabbitMQUserModule,
       global: false, // Will be overridden by the config if specified
       imports: [
         ClientsModule.registerAsync([
           {
-            name: "NOTIFICATION_SERVICE",
+            name: "USER_SERVICE",
             useFactory: async () => {
               const options = await configFactory();
               const { isGlobal = false, ...config } = options;
@@ -41,7 +39,7 @@ export class RabbitMQNotificationModule {
                 // Update the module's global status
                 this.forRoot(options);
               }
-              return createRabbitMQOptions("NOTIFICATION_SERVICE", config);
+              return createRabbitMQOptions("USER_SERVICE", config);
             },
           },
         ]),

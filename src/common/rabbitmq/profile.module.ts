@@ -2,20 +2,20 @@ import { DynamicModule, Module } from "@nestjs/common";
 import { ClientsModule } from "@nestjs/microservices";
 import { RabbitMQConfig, createRabbitMQOptions } from "./types";
 
-interface RabbitMQNotificationModuleOptions extends RabbitMQConfig {
+interface RabbitMQProfileModuleOptions extends RabbitMQConfig {
   isGlobal?: boolean;
 }
 
 @Module({})
-export class RabbitMQNotificationModule {
-  static forRoot(options: RabbitMQNotificationModuleOptions): DynamicModule {
+export class RabbitMQProfileModule {
+  static forRoot(options: RabbitMQProfileModuleOptions): DynamicModule {
     const { isGlobal = false, ...config } = options;
     return {
-      module: RabbitMQNotificationModule,
+      module: RabbitMQProfileModule,
       global: isGlobal,
       imports: [
         ClientsModule.register([
-          createRabbitMQOptions("NOTIFICATION_SERVICE", config),
+          createRabbitMQOptions("PROFILE_SERVICE", config),
         ]),
       ],
       exports: [ClientsModule],
@@ -24,16 +24,16 @@ export class RabbitMQNotificationModule {
 
   static forRootAsync(
     configFactory: () =>
-      | Promise<RabbitMQNotificationModuleOptions>
-      | RabbitMQNotificationModuleOptions
+      | Promise<RabbitMQProfileModuleOptions>
+      | RabbitMQProfileModuleOptions
   ): DynamicModule {
     return {
-      module: RabbitMQNotificationModule,
+      module: RabbitMQProfileModule,
       global: false, // Will be overridden by the config if specified
       imports: [
         ClientsModule.registerAsync([
           {
-            name: "NOTIFICATION_SERVICE",
+            name: "PROFILE_SERVICE",
             useFactory: async () => {
               const options = await configFactory();
               const { isGlobal = false, ...config } = options;
@@ -41,7 +41,7 @@ export class RabbitMQNotificationModule {
                 // Update the module's global status
                 this.forRoot(options);
               }
-              return createRabbitMQOptions("NOTIFICATION_SERVICE", config);
+              return createRabbitMQOptions("PROFILE_SERVICE", config);
             },
           },
         ]),
