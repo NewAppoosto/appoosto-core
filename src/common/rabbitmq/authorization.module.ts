@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ClientsModule } from '@nestjs/microservices';
 import { RabbitMQConfig, createRabbitMQOptions } from './types';
+import { InjectAbleServiceNames } from '../../constants';
 
 interface RabbitMQAuthorizationModuleOptions extends RabbitMQConfig {
   isGlobal?: boolean;
@@ -15,7 +16,7 @@ export class RabbitMQAuthorizationModule {
       global: isGlobal,
       imports: [
         ClientsModule.register([
-          createRabbitMQOptions('AUTHORIZATION_SERVICE', config),
+          createRabbitMQOptions(InjectAbleServiceNames.Authorization, config),
         ]),
       ],
       exports: [ClientsModule],
@@ -33,7 +34,7 @@ export class RabbitMQAuthorizationModule {
       imports: [
         ClientsModule.registerAsync([
           {
-            name: 'AUTHORIZATION_SERVICE',
+            name: InjectAbleServiceNames.Authorization,
             useFactory: async () => {
               const options = await configFactory();
               const { isGlobal = false, ...config } = options;
@@ -41,7 +42,7 @@ export class RabbitMQAuthorizationModule {
                 // Update the module's global status
                 this.forRoot(options);
               }
-              return createRabbitMQOptions('AUTHORIZATION_SERVICE', config);
+              return createRabbitMQOptions(InjectAbleServiceNames., config);
             },
           },
         ]),

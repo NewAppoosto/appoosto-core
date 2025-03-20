@@ -1,4 +1,5 @@
 import { HttpStatus } from "@nestjs/common";
+import { GraphQLError } from "graphql";
 
 /**
  * Custom API Error class for standardized error handling across microservices
@@ -15,10 +16,23 @@ export class ApiError extends Error {
   ) {
     super(message);
     this.errorType = errorType;
+    this.name = "ApiError";
+
     // @ts-ignore Error.captureStackTrace exists in V8 environments
     if (Error.captureStackTrace) {
       // @ts-ignore Error.captureStackTrace exists in V8 environments
       Error.captureStackTrace(this, this.constructor);
     }
+  }
+
+  toGraphQLError(): GraphQLError {
+    return new GraphQLError(this.message, {
+      extensions: {
+        code: this.errorType.errorCode,
+        http: {
+          status: this.errorType.errorStatus,
+        },
+      },
+    });
   }
 }

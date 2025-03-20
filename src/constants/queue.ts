@@ -50,10 +50,18 @@ const EventPatternQueue = {
   invitationAcceptMemberCreation: "create_member",
   loginSessionLog: "add_session_log",
 };
+
+const InjectAbleServiceNames = {
+  User: "USER_SERVICE",
+  Authorization: "AUTHORIZATION_SERVICE",
+  Notification: "NOTIFICATION_SERVICE",
+  Profile: "PROFILE_SERVICE",
+};
 export {
   ApplicationQueue,
   MessagePatternQueue,
   convertToCommandPattern,
   rawMessagePatterns,
   EventPatternQueue,
+  InjectAbleServiceNames,
 };
