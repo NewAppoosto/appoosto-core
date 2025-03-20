@@ -42,7 +42,10 @@ export class RabbitMQAuthorizationModule {
                 // Update the module's global status
                 this.forRoot(options);
               }
-              return createRabbitMQOptions(InjectAbleServiceNames., config);
+              return createRabbitMQOptions(
+                InjectAbleServiceNames.Authorization,
+                config
+              );
             },
           },
         ]),
