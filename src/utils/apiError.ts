@@ -1,5 +1,6 @@
 import { HttpStatus } from "@nestjs/common";
 import { GraphQLError } from "graphql";
+import { RpcException } from "@nestjs/microservices";
 
 /**
  * Custom API Error class for standardized error handling across microservices
@@ -33,6 +34,17 @@ export class ApiError extends Error {
           status: this.errorType.errorStatus,
         },
       },
+    });
+  }
+
+  /**
+   * Converts ApiError to RpcException while preserving error details
+   */
+  toRpcError(): RpcException {
+    return new RpcException({
+      message: this.message,
+      errorType: this.errorType,
+      status: this.errorType.errorStatus,
     });
   }
 }
