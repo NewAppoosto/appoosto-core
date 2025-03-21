@@ -41,10 +41,10 @@ export class ApiError extends Error {
    * Converts ApiError to RpcException while preserving error details
    */
   toRpcError(): RpcException {
-    return new RpcException({
+    const errorObject = {
       message: this.message,
       errorType: this.errorType,
-      status: this.errorType.errorStatus,
-    });
+    };
+    return new RpcException(errorObject);
   }
 }
