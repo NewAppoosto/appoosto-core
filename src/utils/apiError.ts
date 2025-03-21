@@ -7,6 +7,7 @@ import { RpcException } from "@nestjs/microservices";
  */
 export class ApiError extends Error {
   errorType: { errorCode: string; errorStatus: HttpStatus };
+  status: HttpStatus;
 
   constructor(
     message = "Something went wrong",
@@ -18,12 +19,26 @@ export class ApiError extends Error {
     super(message);
     this.errorType = errorType;
     this.name = "ApiError";
+    // Set the status directly for HTTP responses
+    this.status = errorType.errorStatus;
 
     // @ts-ignore Error.captureStackTrace exists in V8 environments
     if (Error.captureStackTrace) {
       // @ts-ignore Error.captureStackTrace exists in V8 environments
       Error.captureStackTrace(this, this.constructor);
     }
+
+    // Set extensions for GraphQL-like error formatting
+    Object.defineProperty(this, "extensions", {
+      value: {
+        code: this.errorType.errorCode,
+        status: this.errorType.errorStatus,
+        http: {
+          status: this.errorType.errorStatus,
+        },
+      },
+      enumerable: true,
+    });
   }
 
   toGraphQLError(): GraphQLError {
