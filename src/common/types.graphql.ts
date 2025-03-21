@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType, Int } from "@nestjs/graphql";
+import { Field, InputType, ObjectType, Int, Directive } from "@nestjs/graphql";
 
 @InputType()
 export class PaginationInput {
@@ -16,6 +16,7 @@ export class PaginationBase {
 }
 
 @ObjectType()
+@Directive('@shareable')
 export class BaseResponse {
   @Field(() => Boolean)
   success!: boolean;
