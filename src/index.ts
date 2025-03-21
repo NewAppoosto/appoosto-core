@@ -11,3 +11,5 @@ export * from "./types";
 export * from "./graphql";
 export * from "./interface";
 export * from "./common";
+
+export * from "./federation/error-handling";
