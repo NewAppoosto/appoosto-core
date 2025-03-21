@@ -45,7 +45,6 @@ export class PermissionGuard {
     @Inject("AUTHORIZATION_SERVICE") private authorizationClient: ClientProxy
   ) {}
 
-  @ToGraphQLError()
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // Get the metadata
     const reflector = Reflect.getMetadata(PERMISSION_KEY, context.getHandler());
