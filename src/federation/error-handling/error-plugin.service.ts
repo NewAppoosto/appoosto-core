@@ -7,7 +7,7 @@ export class FederationErrorPluginService {
     return {
       requestDidStart() {
         return {
-          async willSendResponse({ response, errors }) {
+          async willSendResponse({ response, errors }: any) {
             if (errors?.length) {
               const firstError = errors[0];
 
