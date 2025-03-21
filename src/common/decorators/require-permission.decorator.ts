@@ -10,7 +10,7 @@ import { GqlExecutionContext } from "@nestjs/graphql";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";
 import { ErrorTypes, MessagePatternQueue } from "../../constants";
-import { AsyncMethod, ApiError, ToGraphQLError } from "../../utils";
+import { AsyncMethod, ApiError } from "../../utils";
 
 // Create metadata key for the permission requirements
 export const PERMISSION_KEY = "permissions";
@@ -44,7 +44,7 @@ export class PermissionGuard {
   constructor(
     @Inject("AUTHORIZATION_SERVICE") private authorizationClient: ClientProxy
   ) {}
-
+  @AsyncMethod()
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // Get the metadata
     const reflector = Reflect.getMetadata(PERMISSION_KEY, context.getHandler());
