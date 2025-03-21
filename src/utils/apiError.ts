@@ -5,7 +5,7 @@ import { RpcException } from "@nestjs/microservices";
 /**
  * Custom API Error class for standardized error handling across microservices
  */
-export class ApiError extends GraphQLError {
+export class ApiError extends Error {
   errorType: { errorCode: string; errorStatus: HttpStatus };
 
   constructor(
@@ -15,16 +15,7 @@ export class ApiError extends GraphQLError {
       errorStatus: HttpStatus;
     }
   ) {
-    super(message, {
-      extensions: {
-        code: errorType.errorCode,
-        status: errorType.errorStatus,
-        http: {
-          status: errorType.errorStatus,
-        },
-      },
-    });
-
+    super(message);
     this.errorType = errorType;
     this.name = "ApiError";
 
@@ -33,6 +24,21 @@ export class ApiError extends GraphQLError {
       // @ts-ignore Error.captureStackTrace exists in V8 environments
       Error.captureStackTrace(this, this.constructor);
     }
+  }
+
+  toGraphQLError(): GraphQLError {
+    const error = new GraphQLError(this.message, {
+      extensions: {
+        code: this.errorType.errorCode,
+        status: this.errorType.errorStatus,
+        http: {
+          status: this.errorType.errorStatus,
+        },
+      },
+    });
+    // @ts-ignore - Adding custom property for NestJS/Apollo to read
+    error.status = this.errorType.errorStatus;
+    return error;
   }
 
   /**
@@ -44,10 +50,5 @@ export class ApiError extends GraphQLError {
       errorType: this.errorType,
     };
     return new RpcException(errorObject);
-  }
-
-  // No need for toGraphQLError anymore since we are already a GraphQLError
-  toGraphQLError(): GraphQLError {
-    return this;
   }
 }
