@@ -11,6 +11,3 @@ export * from "./types";
 export * from "./graphql";
 export * from "./interface";
 export * from "./common";
-
-// Decorators
-export * from "./decorators";
