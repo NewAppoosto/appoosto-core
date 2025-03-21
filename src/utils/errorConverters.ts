@@ -46,8 +46,8 @@ export function ToRpcError() {
 }
 
 /**
- * Decorator that converts RpcException to GraphQLError
- * Use this in your consumer service methods where you want to convert RPC errors to GraphQL format
+ * Decorator that converts RpcException or error object to GraphQLError
+ * Use this in your consumer service methods where you want to convert errors to GraphQL format
  */
 export function ToGraphQLError() {
   return function (
@@ -61,12 +61,30 @@ export function ToGraphQLError() {
       try {
         return await originalMethod.apply(this, args);
       } catch (error: unknown) {
+        // First check if it's a plain error object with our format
+        if (
+          error &&
+          typeof error === "object" &&
+          "message" in error &&
+          "errorType" in error &&
+          typeof error.message === "string" &&
+          error.errorType &&
+          typeof error.errorType === "object" &&
+          "errorCode" in error.errorType &&
+          "errorStatus" in error.errorType
+        ) {
+          const apiError = new ApiError(
+            error.message as string,
+            error.errorType as { errorCode: string; errorStatus: HttpStatus }
+          );
+          throw apiError.toGraphQLError();
+        }
+
+        // Then check if it's an RpcException
         if (error instanceof RpcException) {
           const rpcError = error.getError();
 
-          // Check if it's our ApiError format
           if (isRpcErrorType(rpcError)) {
-            // Reconstruct ApiError and convert to GraphQLError
             const apiError = new ApiError(rpcError.message, rpcError.errorType);
             throw apiError.toGraphQLError();
           }
@@ -81,7 +99,7 @@ export function ToGraphQLError() {
           throw apiError.toGraphQLError();
         }
 
-        // If it's not an RPC error
+        // If it's not any of the above
         const message =
           error instanceof Error ? error.message : "Internal Server Error";
         const apiError = new ApiError(
