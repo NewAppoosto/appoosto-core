@@ -30,7 +30,7 @@ export function ToRpcError() {
         if (error instanceof ApiError) {
           throw error.toRpcError();
         }
-        // If it's not an ApiError, wrap it in one
+
         const message =
           error instanceof Error ? error.message : "Internal Server Error";
         const apiError = new ApiError(
@@ -99,7 +99,6 @@ export function ToGraphQLError() {
           throw apiError.toGraphQLError();
         }
 
-        // If it's not any of the above
         const message =
           error instanceof Error ? error.message : "Internal Server Error";
         const apiError = new ApiError(
@@ -115,7 +114,7 @@ export function ToGraphQLError() {
 }
 
 function isRpcErrorType(error: unknown): error is RpcErrorType {
-  return (
+  const result =
     error !== null &&
     typeof error === "object" &&
     "message" in error &&
@@ -126,6 +125,6 @@ function isRpcErrorType(error: unknown): error is RpcErrorType {
     "errorCode" in error.errorType &&
     typeof error.errorType.errorCode === "string" &&
     "errorStatus" in error.errorType &&
-    typeof error.errorType.errorStatus === "number"
-  );
+    typeof error.errorType.errorStatus === "number";
+  return result;
 }

@@ -30,9 +30,7 @@ export class ApiError extends Error {
     return new GraphQLError(this.message, {
       extensions: {
         code: this.errorType.errorCode,
-        http: {
-          status: this.errorType.errorStatus,
-        },
+        status: this.errorType.errorStatus,
       },
     });
   }
