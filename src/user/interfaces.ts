@@ -2,6 +2,8 @@
  * User interface
  */
 
+import { JWTUser } from "../types";
+
 /**
  * User details interface
  */
@@ -19,4 +21,8 @@ export interface ICompanyDetails  {
   name: string;
   legal_address: string;
   vat_number: string;
+}
+
+export interface RequestWithUser extends Request {
+  user: JWTUser;
 }
