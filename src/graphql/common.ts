@@ -3,13 +3,13 @@ import { Field, InputType, Int, registerEnumType } from "@nestjs/graphql";
 @InputType()
 export class PaginationInput {
   @Field(() => Int, { defaultValue: 1, nullable: true })
-  page?: number;
+  page!: number;
 
   @Field(() => Int, { defaultValue: 20, nullable: true })
-  limit?: number;
+  limit!: number;
 
   @Field(() => String, { nullable: true })
-  search?: string;
+  search!: string;
 }
 export enum SortOrder {
   ASC = "ASC",
