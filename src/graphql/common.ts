@@ -26,6 +26,6 @@ export class SortInput {
   @Field(() => String, { nullable: true })
   field?: string;
 
-  @Field(() => SortOrder, { nullable: true })
-  order?: SortOrder;
+  @Field(() => SortOrder, { nullable: true, defaultValue: SortOrder.DESC })
+  order!: SortOrder;
 }
