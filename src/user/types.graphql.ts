@@ -46,36 +46,35 @@ export class CompanyDetails {
 @ObjectType({ description: "User details" })
 @Directive('@key(fields: "id")')
 @Directive("@extends")
-@Directive("@shareable")
 export class UserDetails implements IUserDetails {
   @Field(() => ID)
-  @Directive("@shareable")
+  @Directive("@external")
   id!: string;
 
   @Field({
     description:
       "Username of the user. Unique username for every user is required",
   })
-  @Directive("@shareable")
+  @Directive("@external")
   username!: string;
 
   @Field({ description: "Email of the user. It have to be unique" })
-  @Directive("@shareable")
+  @Directive("@external")
   email!: string;
 
   @Field({ defaultValue: false })
-  @Directive("@shareable")
+  @Directive("@external")
   is_google_connected!: boolean;
 
   @Field({ defaultValue: false })
-  @Directive("@shareable")
+  @Directive("@external")
   is_github_connected!: boolean;
 
   @Field({ defaultValue: false })
-  @Directive("@shareable")
+  @Directive("@external")
   is_linked_in_connected!: boolean;
 
   @Field({ defaultValue: false })
-  @Directive("@shareable")
+  @Directive("@external")
   twofa_enabled!: boolean;
 }
