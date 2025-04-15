@@ -67,3 +67,32 @@ export class UserDetails implements IUserDetails {
   @Field({ defaultValue: false })
   twofa_enabled!: boolean;
 }
+
+@ObjectType()
+@Directive('@key(fields: "id")')
+@Directive("@shareable")
+export class NotificationDetails {
+  @Field(() => String)
+  title!: string;
+
+  @Field(() => String)
+  message!: string;
+
+  @Field(() => String)
+  action_url!: string;
+
+  @Field(() => String)
+  type!: string;
+
+  @Field(() => String)
+  status!: string;
+
+  @Field(() => Date)
+  expires_at!: Date;
+
+  @Field(() => String)
+  company_id!: string;
+
+  @Field(() => String)
+  user_id!: string;
+}
