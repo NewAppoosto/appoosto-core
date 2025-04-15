@@ -24,31 +24,31 @@ registerEnumType(InvitationStatus, {
 
 @ObjectType({ description: "Company details", isAbstract: true })
 @Directive('@key(fields: "id")')
-@Directive('@extends')
+@Directive("@extends")
 export class CompanyDetails {
-  @Field(() => ID) 
-  @Directive('@external')
+  @Field(() => ID)
+  @Directive("@external")
   id!: string;
 
   @Field({ description: "Company name" })
-  @Directive('@external')
+  @Directive("@external")
   name!: string;
 
   @Field({ description: "Legal address of the company" })
-  @Directive('@external')
+  @Directive("@external")
   legal_address!: string;
 
   @Field({ description: "VAT number of the company" })
-  @Directive('@external')
+  @Directive("@external")
   vat_number!: string;
 }
 
 @ObjectType({ description: "User details" })
 @Directive('@key(fields: "id")')
-@Directive('@extends')
+@Directive("@extends")
+@Directive("@shareable")
 export class UserDetails implements IUserDetails {
   @Field(() => ID)
-    
   id!: string;
 
   @Field({
@@ -59,4 +59,12 @@ export class UserDetails implements IUserDetails {
 
   @Field({ description: "Email of the user. It have to be unique" })
   email!: string;
+  @Field({ defaultValue: false })
+  is_google_connected!: boolean;
+  @Field({ defaultValue: false })
+  is_github_connected!: boolean;
+  @Field({ defaultValue: false })
+  is_linked_in_connected!: boolean;
+  @Field({ defaultValue: false })
+  twofa_enabled!: boolean;
 }
