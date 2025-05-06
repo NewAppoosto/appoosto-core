@@ -26,6 +26,15 @@ export class ApiError extends Error {
     }
   }
 
+  static fromGraphQLError(error: GraphQLError): ApiError {
+    return new ApiError(error.message, {
+      errorCode: (error.extensions?.code as string) || "INTERNAL_SERVER_ERROR",
+      errorStatus:
+        (error.extensions?.status as HttpStatus) ||
+        HttpStatus.INTERNAL_SERVER_ERROR,
+    });
+  }
+
   toGraphQLError(): GraphQLError {
     const error = new GraphQLError(this.message, {
       extensions: {

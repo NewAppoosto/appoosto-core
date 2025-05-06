@@ -2,6 +2,7 @@ import { RpcException } from "@nestjs/microservices";
 import { ApiError } from "./apiError";
 import { ErrorTypes } from "../constants";
 import { HttpStatus } from "@nestjs/common";
+import { GraphQLError } from "graphql";
 
 interface RpcErrorType {
   message: string;
@@ -28,6 +29,19 @@ export function ToRpcError() {
         return await originalMethod.apply(this, args);
       } catch (error: unknown) {
         console.log("Original error:", error);
+
+        // Handle GraphQLError
+        if (error instanceof GraphQLError) {
+          console.log("Converting GraphQLError to RPC:", error);
+          const apiError = ApiError.fromGraphQLError(error);
+          console.log("Created ApiError from GraphQLError:", {
+            message: apiError.message,
+            errorType: apiError.errorType,
+          });
+          return apiError.toRpcError();
+        }
+
+        // Handle ApiError
         if (error instanceof ApiError) {
           console.log("Converting ApiError to RPC:", {
             message: error.message,
@@ -38,6 +52,7 @@ export function ToRpcError() {
           throw rpcError;
         }
 
+        // Handle other errors
         const message =
           error instanceof Error ? error.message : "Internal Server Error";
         const apiError = new ApiError(
