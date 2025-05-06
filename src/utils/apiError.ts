@@ -45,10 +45,17 @@ export class ApiError extends Error {
    * Converts ApiError to RpcException while preserving error details
    */
   toRpcError(): RpcException {
+    console.log("ApiError.toRpcError - Original error:", {
+      message: this.message,
+      errorType: this.errorType,
+    });
     const errorObject = {
       message: this.message,
       errorType: this.errorType,
     };
-    return new RpcException(errorObject);
+    console.log("ApiError.toRpcError - Created error object:", errorObject);
+    const rpcError = new RpcException(errorObject);
+    console.log("ApiError.toRpcError - Final RPC error:", rpcError.getError());
+    return rpcError;
   }
 }

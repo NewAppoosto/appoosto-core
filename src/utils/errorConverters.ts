@@ -27,8 +27,15 @@ export function ToRpcError() {
       try {
         return await originalMethod.apply(this, args);
       } catch (error: unknown) {
+        console.log("Original error:", error);
         if (error instanceof ApiError) {
-          throw error.toRpcError();
+          console.log("Converting ApiError to RPC:", {
+            message: error.message,
+            errorType: error.errorType,
+          });
+          const rpcError = error.toRpcError();
+          console.log("Converted RPC error:", rpcError.getError());
+          throw rpcError;
         }
 
         const message =
@@ -61,6 +68,8 @@ export function ToGraphQLError() {
       try {
         return await originalMethod.apply(this, args);
       } catch (error: unknown) {
+        console.log("ToGraphQLError - Received error:", error);
+
         // First check if it's a plain error object with our format
         if (
           error &&
@@ -73,6 +82,7 @@ export function ToGraphQLError() {
           "errorCode" in error.errorType &&
           "errorStatus" in error.errorType
         ) {
+          console.log("ToGraphQLError - Converting plain error object:", error);
           const apiError = new ApiError(
             error.message as string,
             error.errorType as { errorCode: string; errorStatus: HttpStatus }
@@ -82,14 +92,23 @@ export function ToGraphQLError() {
 
         // Then check if it's an RpcException
         if (error instanceof RpcException) {
+          console.log("ToGraphQLError - Handling RpcException");
           const rpcError = error.getError();
+          console.log("ToGraphQLError - RPC error details:", rpcError);
 
           if (isRpcErrorType(rpcError)) {
+            console.log(
+              "ToGraphQLError - Converting RPC error to GraphQL:",
+              rpcError
+            );
             const apiError = new ApiError(rpcError.message, rpcError.errorType);
             throw apiError.toGraphQLError();
           }
 
           // If it's a regular RPC error
+          console.log(
+            "ToGraphQLError - Converting regular RPC error to GraphQL"
+          );
           const message =
             typeof rpcError === "string" ? rpcError : "Internal Server Error";
           const apiError = new ApiError(
@@ -99,6 +118,7 @@ export function ToGraphQLError() {
           throw apiError.toGraphQLError();
         }
 
+        console.log("ToGraphQLError - Converting unknown error to GraphQL");
         const message =
           error instanceof Error ? error.message : "Internal Server Error";
         const apiError = new ApiError(
