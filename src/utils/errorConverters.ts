@@ -28,27 +28,15 @@ export function ToRpcError() {
       try {
         return await originalMethod.apply(this, args);
       } catch (error: unknown) {
-        console.log("Original error:", error);
-
         // Handle GraphQLError
         if (error instanceof GraphQLError) {
-          console.log("Converting GraphQLError to RPC:", error);
           const apiError = ApiError.fromGraphQLError(error);
-          console.log("Created ApiError from GraphQLError:", {
-            message: apiError.message,
-            errorType: apiError.errorType,
-          });
           throw apiError.toRpcError();
         }
 
         // Handle ApiError
         if (error instanceof ApiError) {
-          console.log("Converting ApiError to RPC:", {
-            message: error.message,
-            errorType: error.errorType,
-          });
           const rpcError = error.toRpcError();
-          console.log("Converted RPC error:", rpcError.getError());
           throw rpcError;
         }
 
@@ -83,11 +71,8 @@ export function ToGraphQLError() {
       try {
         return await originalMethod.apply(this, args);
       } catch (error: unknown) {
-        console.log("ToGraphQLError - Received error:", error);
-
         // Handle GraphQLError directly (pass through)
         if (error instanceof GraphQLError) {
-          console.log("ToGraphQLError - Passing through existing GraphQLError");
           throw error;
         }
 
@@ -103,7 +88,6 @@ export function ToGraphQLError() {
           "errorCode" in error.errorType &&
           "errorStatus" in error.errorType
         ) {
-          console.log("ToGraphQLError - Converting plain error object:", error);
           const apiError = new ApiError(
             error.message as string,
             error.errorType as { errorCode: string; errorStatus: HttpStatus }
@@ -113,16 +97,10 @@ export function ToGraphQLError() {
 
         // Check if it's an RpcException
         if (error instanceof RpcException) {
-          console.log("ToGraphQLError - Handling RpcException");
           const rpcError = error.getError();
-          console.log("ToGraphQLError - RPC error details:", rpcError);
 
           // Try standard format first
           if (isRpcErrorType(rpcError)) {
-            console.log(
-              "ToGraphQLError - Converting RPC error to GraphQL:",
-              rpcError
-            );
             const apiError = new ApiError(rpcError.message, rpcError.errorType);
             throw apiError.toGraphQLError();
           }
@@ -135,15 +113,7 @@ export function ToGraphQLError() {
             typeof rpcError.error === "object" &&
             rpcError.error !== null
           ) {
-            console.log(
-              "ToGraphQLError - Checking nested error structure:",
-              rpcError.error
-            );
-
             if (isRpcErrorType(rpcError.error)) {
-              console.log(
-                "ToGraphQLError - Converting nested RPC error to GraphQL"
-              );
               const apiError = new ApiError(
                 rpcError.error.message,
                 rpcError.error.errorType
@@ -153,9 +123,6 @@ export function ToGraphQLError() {
           }
 
           // If it's a regular RPC error
-          console.log(
-            "ToGraphQLError - Converting regular RPC error to GraphQL"
-          );
           const message =
             typeof rpcError === "string"
               ? rpcError
@@ -171,17 +138,13 @@ export function ToGraphQLError() {
             rpcError !== null &&
             "status" in rpcError &&
             typeof rpcError.status === "number"
-              ? {
-                  errorCode: getErrorCodeForStatus(rpcError.status),
-                  errorStatus: rpcError.status,
-                }
+              ? getErrorCodeForStatus(rpcError.status)
               : ErrorTypes.INTERNAL_SERVER_ERROR;
 
           const apiError = new ApiError(message, errorType);
           throw apiError.toGraphQLError();
         }
 
-        console.log("ToGraphQLError - Converting unknown error to GraphQL");
         // Handle generic Error objects
         const message =
           error instanceof Error ? error.message : "Internal Server Error";
