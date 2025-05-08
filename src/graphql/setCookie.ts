@@ -9,7 +9,7 @@ export const addTokenToCookie = (
 ) => {
   ctx.req?.res?.setHeader(
     "Set-Cookie",
-    `token=${token}; HttpOnly; Path=/; ${
+    `access_token=${token}; HttpOnly; Path=/; ${
       isProduction
         ? "Domain=.appoosto.io; Secure; SameSite=None"
         : "SameSite=Lax"
@@ -18,7 +18,10 @@ export const addTokenToCookie = (
 };
 
 export const removeTokenFromCookie = (ctx: ServerContext) => {
-  ctx.req?.res?.setHeader("Set-Cookie", `token=; HttpOnly; Path=/; Max-Age=0`);
+  ctx.req?.res?.setHeader(
+    "Set-Cookie",
+    `access_token=; HttpOnly; Path=/; Max-Age=0`
+  );
 };
 
 export const addCookie = (
