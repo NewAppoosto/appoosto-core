@@ -15,6 +15,15 @@ export const addTokenToCookie = (
         : "SameSite=Lax"
     }; Max-Age=${expiresIn}`
   );
+  // ! remove this after testing
+  ctx.req?.res?.setHeader(
+    "Set-Cookie",
+    `is_Authenticated=true; Path=/; ${
+      isProduction
+        ? "Domain=.appoosto.io; Secure; SameSite=None"
+        : "SameSite=Lax"
+    }; Max-Age=${expiresIn}`
+  );
 };
 
 export const removeTokenFromCookie = (ctx: ServerContext) => {
@@ -22,6 +31,8 @@ export const removeTokenFromCookie = (ctx: ServerContext) => {
     "Set-Cookie",
     `access_token=; HttpOnly; Path=/; Max-Age=0`
   );
+  // ! remove this after testing
+  ctx.req?.res?.setHeader("Set-Cookie", `is_Authenticated=; Path=/; Max-Age=0`);
 };
 
 export const addCookie = (
