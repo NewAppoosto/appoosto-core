@@ -7,24 +7,32 @@ export const addTokenToCookie = (
   token: string,
   expiresIn: string
 ) => {
+  const accessTokenCookie = `access_token=${token}; HttpOnly; Path=/; ${
+    isProduction ? "Domain=.appoosto.io; Secure; SameSite=None" : "SameSite=Lax"
+  }; Max-Age=${expiresIn}`;
+
+  const isAuthenticatedCookie = `is_Authenticated=true; Path=/; ${
+    isProduction ? "Domain=.appoosto.io; Secure; SameSite=None" : "SameSite=Lax"
+  }; Max-Age=${expiresIn}`;
+
   ctx.req?.res?.setHeader("Set-Cookie", [
-    `access_token=${token}; HttpOnly; Path=/; ${
-      isProduction
-        ? "Domain=.appoosto.io; Secure; SameSite=None"
-        : "SameSite=Lax"
-    }; Max-Age=${expiresIn}`,
-    `is_Authenticated=true; Path=/; ${
-      isProduction
-        ? "Domain=.appoosto.io; Secure; SameSite=None"
-        : "SameSite=Lax"
-    }; Max-Age=${expiresIn}`,
+    accessTokenCookie,
+    isAuthenticatedCookie,
   ]);
 };
 
 export const removeTokenFromCookie = (ctx: ServerContext) => {
   ctx.req?.res?.setHeader("Set-Cookie", [
-    `access_token=; HttpOnly; Path=/; Max-Age=0`,
-    `is_Authenticated=; Path=/; Max-Age=0`,
+    `access_token=; HttpOnly; Path=/; ${
+      isProduction
+        ? "Domain=.appoosto.io; Secure; SameSite=None"
+        : "SameSite=Lax"
+    }; Max-Age=0`,
+    `is_Authenticated=; Path=/; ${
+      isProduction
+        ? "Domain=.appoosto.io; Secure; SameSite=None"
+        : "SameSite=Lax"
+    }; Max-Age=0`,
   ]);
 };
 
