@@ -1,8 +1,7 @@
-import { Request, Response } from "express";
+import { Request } from "express";
 import { JWTUser } from "./jwt_data";
-
 export type ServerContext = {
   authorization: string;
-  req: Request & { res?: Response };
+  req: Request;
   user: JWTUser;
 };
