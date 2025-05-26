@@ -15,10 +15,9 @@ export const addTokenToCookie = (
     isProduction ? "Domain=.appoosto.io; Secure; SameSite=None" : "SameSite=Lax"
   }; Max-Age=${expiresIn}`;
 
-  ctx.req?.res?.setHeader("Set-Cookie", [
-    accessTokenCookie,
-    isAuthenticatedCookie,
-  ]);
+  // Set cookies individually to ensure both are set
+  ctx.req?.res?.setHeader("Set-Cookie", accessTokenCookie);
+  ctx.req?.res?.setHeader("Set-Cookie", isAuthenticatedCookie);
 };
 
 export const removeTokenFromCookie = (ctx: ServerContext) => {
