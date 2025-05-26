@@ -7,24 +7,19 @@ export const addTokenToCookie = (
   token: string,
   expiresIn: string
 ) => {
-  // Create both cookie strings
-  const cookies = [
-    `access_token=${token}; HttpOnly; Path=/; ${
-      isProduction
-        ? "Domain=.appoosto.io; Secure; SameSite=None"
-        : "SameSite=Lax"
-    }; Max-Age=${expiresIn}`,
-    `is_Authenticated=true; Path=/; ${
-      isProduction
-        ? "Domain=.appoosto.io; Secure; SameSite=None"
-        : "SameSite=Lax"
-    }; Max-Age=${expiresIn}`,
-  ];
+  const accessTokenCookie = `access_token=${token}; HttpOnly; Path=/; ${
+    isProduction ? "Domain=.appoosto.io; Secure; SameSite=None" : "SameSite=Lax"
+  }; Max-Age=${expiresIn}`;
 
-  // Set both cookies at once
-  if (ctx.req?.res?.setHeader) {
-    ctx.req.res.setHeader("Set-Cookie", cookies);
-  }
+  const isAuthenticatedCookie = `is_Authenticated=true; Path=/; ${
+    isProduction ? "Domain=.appoosto.io; Secure; SameSite=None" : "SameSite=Lax"
+  }; Max-Age=${expiresIn}`;
+
+  // Set cookies individually to ensure both are set
+  ctx.req?.res?.setHeader("Set-Cookie", [
+    accessTokenCookie,
+    isAuthenticatedCookie,
+  ]);
 };
 
 export const removeTokenFromCookie = (ctx: ServerContext) => {
