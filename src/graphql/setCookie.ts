@@ -7,32 +7,24 @@ export const addTokenToCookie = (
   token: string,
   expiresIn: string
 ) => {
-  const accessTokenCookie = `access_token=${token}; HttpOnly; Path=/; ${
-    isProduction ? "Domain=.appoosto.io; Secure; SameSite=None" : "SameSite=Lax"
-  }; Max-Age=${expiresIn}`;
+  // Create both cookie strings
+  const cookies = [
+    `access_token=${token}; HttpOnly; Path=/; ${
+      isProduction
+        ? "Domain=.appoosto.io; Secure; SameSite=None"
+        : "SameSite=Lax"
+    }; Max-Age=${expiresIn}`,
+    `is_Authenticated=true; Path=/; ${
+      isProduction
+        ? "Domain=.appoosto.io; Secure; SameSite=None"
+        : "SameSite=Lax"
+    }; Max-Age=${expiresIn}`,
+  ];
 
-  const isAuthenticatedCookie = `is_Authenticated=true; Path=/; ${
-    isProduction ? "Domain=.appoosto.io; Secure; SameSite=None" : "SameSite=Lax"
-  }; Max-Age=${expiresIn}`;
-
-  // Get existing cookies if any and ensure we're working with strings
-  const existingCookies = ctx.req?.res?.getHeader("Set-Cookie");
-  const cookiesArray: string[] = [];
-
-  // Add existing cookies if any
-  if (existingCookies) {
-    if (Array.isArray(existingCookies)) {
-      cookiesArray.push(...existingCookies.map(String));
-    } else {
-      cookiesArray.push(String(existingCookies));
-    }
+  // Set both cookies at once
+  if (ctx.req?.res?.setHeader) {
+    ctx.req.res.setHeader("Set-Cookie", cookies);
   }
-
-  // Add our new cookies
-  cookiesArray.push(accessTokenCookie, isAuthenticatedCookie);
-
-  // Set all cookies at once
-  ctx.req?.res?.setHeader("Set-Cookie", cookiesArray);
 };
 
 export const removeTokenFromCookie = (ctx: ServerContext) => {
