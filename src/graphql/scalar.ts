@@ -60,7 +60,7 @@ export const DateTimeScalar = new GraphQLScalarType({
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export const EmailScalar = new GraphQLScalarType({
-  name: "Email",
+  name: "EMAIL_ADDRESS",
   description: "A valid email address",
   serialize: (value: unknown) => {
     if (typeof value === "string" && emailRegex.test(value)) {
