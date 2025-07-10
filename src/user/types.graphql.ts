@@ -54,21 +54,27 @@ export class UserDetails implements IUserDetails {
   username!: string;
 
   @Field({ description: "Email of the user. It have to be unique" })
+  @Directive("@shareable")
   email!: string;
 
   @Field({ defaultValue: false })
+  @Directive("@shareable")
   is_google_connected!: boolean;
 
   @Field({ defaultValue: false })
+  @Directive("@shareable")
   is_github_connected!: boolean;
 
   @Field({ defaultValue: false })
+  @Directive("@shareable")
   is_linked_in_connected!: boolean;
 
   @Field({ defaultValue: false })
+  @Directive("@shareable")
   twofa_enabled!: boolean;
 
   @Field(() => Date)
+  @Directive("@shareable")
   created_at!: Date;
 
   @Field(() => Date)
@@ -107,24 +113,28 @@ export class UserDetails implements IUserDetails {
     description:
       "Phone number of the user. It is required for phone verification.",
   })
+  @Directive("@shareable")
   phone_number?: string;
 
   @Field({
     nullable: true,
     description: "Google id of the user. This field is required if is_google_connected is true. Google id is unique for every user in google and this value will be added at the time of connecting with google",
   })
+  @Directive("@shareable")
   google_id?: string;
 
   @Field({
     nullable: true,
     description: "Github id of the user. This value is used in order to determine if this account has been used in another account or not",
   })
+  @Directive("@shareable")
   github_id?: string;
   
   @Field({
     nullable: true,
     description: "Linkedin id of the user. This value is used in order to determine if this account has been used in another account or not",
   })
+  @Directive("@shareable")
   linked_in_id?: string;
 }
 
