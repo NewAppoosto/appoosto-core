@@ -78,6 +78,7 @@ export class UserDetails implements IUserDetails {
   created_at!: Date;
 
   @Field(() => Date)
+  @Directive("@shareable")
   updated_at!: Date;
 
   @Field({
@@ -118,21 +119,24 @@ export class UserDetails implements IUserDetails {
 
   @Field({
     nullable: true,
-    description: "Google id of the user. This field is required if is_google_connected is true. Google id is unique for every user in google and this value will be added at the time of connecting with google",
+    description:
+      "Google id of the user. This field is required if is_google_connected is true. Google id is unique for every user in google and this value will be added at the time of connecting with google",
   })
   @Directive("@shareable")
   google_id?: string;
 
   @Field({
     nullable: true,
-    description: "Github id of the user. This value is used in order to determine if this account has been used in another account or not",
+    description:
+      "Github id of the user. This value is used in order to determine if this account has been used in another account or not",
   })
   @Directive("@shareable")
   github_id?: string;
-  
+
   @Field({
     nullable: true,
-    description: "Linkedin id of the user. This value is used in order to determine if this account has been used in another account or not",
+    description:
+      "Linkedin id of the user. This value is used in order to determine if this account has been used in another account or not",
   })
   @Directive("@shareable")
   linked_in_id?: string;
