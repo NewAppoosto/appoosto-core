@@ -66,6 +66,65 @@ export class UserDetails implements IUserDetails {
 
   @Field({ defaultValue: false })
   twofa_enabled!: boolean;
+
+  @Field(() => Date)
+  created_at!: Date;
+
+  @Field(() => Date)
+  updated_at!: Date;
+
+  @Field({
+    description: "First name of the user",
+  })
+  @Directive("@shareable")
+  first_name!: string;
+
+  @Field({
+    description: "Last name of the user",
+  })
+  @Directive("@shareable")
+  last_name!: string;
+
+  @Field({
+    defaultValue: "",
+    nullable: true,
+    description: "Profile photo of the user. It will just store the image url.",
+  })
+  @Directive("@shareable")
+  profile_photo?: string;
+
+  @Field({
+    defaultValue: "",
+    nullable: true,
+    description: "Cover photo of the user. It will just store the image url.",
+  })
+  @Directive("@shareable")
+  cover_photo?: string;
+
+  @Field({
+    nullable: true,
+    description:
+      "Phone number of the user. It is required for phone verification.",
+  })
+  phone_number?: string;
+
+  @Field({
+    nullable: true,
+    description: "Google id of the user. This field is required if is_google_connected is true. Google id is unique for every user in google and this value will be added at the time of connecting with google",
+  })
+  google_id?: string;
+
+  @Field({
+    nullable: true,
+    description: "Github id of the user. This value is used in order to determine if this account has been used in another account or not",
+  })
+  github_id?: string;
+  
+  @Field({
+    nullable: true,
+    description: "Linkedin id of the user. This value is used in order to determine if this account has been used in another account or not",
+  })
+  linked_in_id?: string;
 }
 
 @ObjectType()
