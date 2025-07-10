@@ -50,6 +50,7 @@ export class UserDetails implements IUserDetails {
     description:
       "Username of the user. Unique username for every user is required",
   })
+  @Directive("@shareable")
   username!: string;
 
   @Field({ description: "Email of the user. It have to be unique" })
