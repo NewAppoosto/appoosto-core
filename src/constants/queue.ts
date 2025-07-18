@@ -3,6 +3,7 @@ const ApplicationQueue = {
   Notification: "notifications_queue",
   User: "auth_requests_queue",
   Profile: "profile_requests_queue",
+  Media: "media_requests_queue",
 };
 
 const convertToCommandPattern = <T extends Record<string, string>>(
