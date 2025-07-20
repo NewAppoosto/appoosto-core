@@ -5,17 +5,23 @@ const isProduction = process.env.NODE_ENV === "production";
 export const addTokenToCookie = (
   ctx: ServerContext,
   token: string,
-  expiresIn: string
+  expiresIn: string // must be seconds as string like '3600'
 ) => {
-  ctx.req?.res?.setHeader(
-    "Set-Cookie",
-    `access_token=${token}; HttpOnly; Path=/; ${
-      isProduction
-        ? "Domain=.appoosto.io; Secure; SameSite=None"
-        : "SameSite=Lax"
-    }; Max-Age=${expiresIn}`
-  );
+  const maxAge = parseInt(expiresIn, 10);
 
+  const cookie = [
+    `access_token=${token}`,
+    `HttpOnly`,
+    `Path=/`,
+    `Max-Age=${maxAge}`,
+    isProduction ? `Domain=.appoosto.io` : "",
+    isProduction ? `Secure` : "",
+    isProduction ? `SameSite=None` : `SameSite=Lax`,
+  ]
+    .filter(Boolean) // remove empty strings
+    .join("; ");
+
+  ctx.req?.res?.setHeader("Set-Cookie", cookie);
 };
 
 export const removeTokenFromCookie = (ctx: ServerContext) => {
